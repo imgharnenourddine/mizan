@@ -14,3 +14,9 @@ dist/
 build/
 .pytest_cache/
 .mypy_cache/
+node_modules/
+**/node_modules/
+.env
+build/
+dist/
+.next/
