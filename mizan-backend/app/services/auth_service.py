@@ -17,7 +17,7 @@ from app.core.security import (
     verify_password,
 )
 from app.models.user import User
-from app.schemas.auth import Token
+from app.schemas.auth import TokenResponse
 
 settings = get_settings()
 
@@ -98,7 +98,7 @@ async def set_password(db: AsyncSession, token: str, new_password: str) -> dict:
     }
 
 
-async def login(email: str, password: str, db: AsyncSession) -> Token:
+async def login(email: str, password: str, db: AsyncSession) -> TokenResponse:
     result = await db.execute(select(User).where(User.email == email))
     user = result.scalars().first()
     
@@ -117,4 +117,18 @@ async def login(email: str, password: str, db: AsyncSession) -> Token:
     access_token = create_access_token({"user_id": str(user.id), "role": user.role})
     refresh_token = create_refresh_token({"user_id": str(user.id), "role": user.role})
     
-    return Token(access_token=access_token, refresh_token=refresh_token)
+    return TokenResponse(access_token=access_token, refresh_token=refresh_token)
+async def refresh_access_token(db: AsyncSession, token: str) -> dict:
+    try:
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        user_id = payload.get("user_id")
+        role = payload.get("role")
+        
+        if not user_id:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+    except JWTError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+    
+    new_access_token = create_access_token({"user_id": user_id, "role": role})
+    
+    return {"access_token": new_access_token, "token_type": "bearer"}

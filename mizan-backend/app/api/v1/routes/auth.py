@@ -49,7 +49,7 @@ async def handle_set_password(
 async def handle_login(
     payload: LoginSchema, db: AsyncSession = Depends(get_db)
 ):
-    return await login(db, payload.email, payload.password)
+    return await login(payload.email, payload.password, db)
 
 
 @router.post("/refresh")

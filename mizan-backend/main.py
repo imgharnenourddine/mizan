@@ -2,7 +2,7 @@
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
+from app.api.v1.routes.auth import router as auth_router
 app = FastAPI(
     title="Mizan API",
     description="Backend for Mizan - Student Wellbeing AI Platform",
@@ -19,7 +19,7 @@ app.add_middleware(
 
 app.include_router(auth_router, prefix="/api/v1")
 
-app.include_router(auth_router, prefix="/api/v1")
+
 
 @app.get("/health", tags=["System"])
 async def health_check():
