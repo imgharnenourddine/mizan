@@ -1,12 +1,14 @@
-# Entry point for the Mizan FastAPI application — configures CORS, routers, and health check
 
+# main.py
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.api.v1.routes.auth import router as auth_router
+
 app = FastAPI(
     title="Mizan API",
+    description="Backend for Mizan - Student Wellbeing AI Platform",
     version="1.0.0",
-    description="Mizan — ميزان · L'agent IA de bien-être étudiant",
 )
 
 app.add_middleware(
@@ -17,7 +19,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(auth_router, prefix="/api/v1")
 
-@app.get("/health")
+
+@app.get("/health", tags=["System"])
 async def health_check():
-    return {"status": "ok", "version": "1.0.0", "project": "Mizan — ميزان"}
+    return {"status": "healthy"}
