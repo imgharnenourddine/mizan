@@ -36,6 +36,10 @@ class Settings(BaseSettings):
     CLOUDINARY_API_KEY: str
     CLOUDINARY_API_SECRET: str = ""
 
+    ELEVENLABS_API_KEY: str = ""
+    ELEVENLABS_VOICE_ID: str = ""
+    GROQ_API_KEY: str = ""
+
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
 

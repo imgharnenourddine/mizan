@@ -1,4 +1,3 @@
-# SQLAlchemy models for Student profile, Schedule (emploi du temps), Exam, and Project
 # app/models/student.py
 import uuid
 from datetime import date, datetime, time
@@ -37,6 +36,7 @@ class Student(Base):
     evening_checkins: Mapped[List["EveningCheckin"]] = relationship("EveningCheckin", back_populates="student")
     goals: Mapped[List["Goal"]] = relationship("Goal", back_populates="student")
     mode_sessions: Mapped[List["ModeSession"]] = relationship("ModeSession", back_populates="student")
+    voice_sessions: Mapped[List["VoiceSession"]] = relationship("VoiceSession", back_populates="student")
 
 
 class Schedule(Base):

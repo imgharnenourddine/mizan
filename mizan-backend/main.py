@@ -8,6 +8,7 @@ from app.api.v1.routes.students import router as students_router
 from app.api.v1.routes.goals import router as goals_router
 from app.api.v1.routes.modes import router as modes_router
 from app.api.v1.routes.analytics import router as analytics_router
+from app.api.v1.routes.voice import router as voice_router
 app = FastAPI(
     title="Mizan API",
     description="Backend for Mizan - Student Wellbeing AI Platform",
@@ -29,6 +30,7 @@ app.include_router(checkins_router, prefix="/api/v1")
 app.include_router(goals_router, prefix="/api/v1")
 app.include_router(modes_router, prefix="/api/v1")
 app.include_router(analytics_router, prefix="/api/v1")
+app.include_router(voice_router, prefix="/api/v1")
 @app.get("/health")
 async def health_check():
     return {"status": "ok", "version": "1.0.0", "project": "Mizan — ميزان"}
