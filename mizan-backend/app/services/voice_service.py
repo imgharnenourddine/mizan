@@ -74,17 +74,23 @@ async def get_questions_for_student(db: AsyncSession, student_id: UUID, period: 
 
 
 async def text_to_speech(text: str) -> bytes:
-    if not settings.ELEVENLABS_API_KEY or not settings.ELEVENLABS_VOICE_ID:
-        return b""
-        
-    client = AsyncElevenLabs(api_key=settings.ELEVENLABS_API_KEY)
-    audio_generator = await client.text_to_speech.convert(
+    settings = get_settings()
+    
+    from elevenlabs import ElevenLabs
+    
+    client = ElevenLabs(api_key=settings.ELEVENLABS_API_KEY)
+    
+    audio = client.text_to_speech.convert(
         voice_id=settings.ELEVENLABS_VOICE_ID,
         text=text,
-        model_id="eleven_multilingual_v2"
+        model_id="eleven_multilingual_v2",
+        output_format="mp3_44100_128",
     )
     
-    audio_bytes = b"".join([chunk async for chunk in audio_generator])
+    audio_bytes = b""
+    for chunk in audio:
+        audio_bytes += chunk
+    
     return audio_bytes
 
 
