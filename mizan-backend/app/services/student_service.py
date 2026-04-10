@@ -3,7 +3,7 @@
 from datetime import date, datetime, timedelta
 from typing import Any, Dict
 from uuid import UUID
-
+from app.services.file_service import validate_csv_file
 from fastapi import HTTPException, UploadFile, status
 from sqlalchemy import select, and_
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -27,6 +27,7 @@ async def _verify_class_exists(db: AsyncSession, class_id: UUID) -> None:
 
 
 async def import_students_from_csv(db: AsyncSession, class_id: UUID, file: UploadFile) -> int:
+    validate_csv_file(file) 
     await _verify_class_exists(db, class_id)
     rows = await parse_trombi_csv(file)
     count = 0
