@@ -6,18 +6,19 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
-from app.core.dependencies import require_admin
+from app.core.dependencies import require_role
+from app.models.user import Role
 from app.models.student import Student
 from app.services.file_service import (
     delete_photo_from_cloudinary,
     upload_photo_to_cloudinary,
     validate_image_file,
 )
-
+admin_dep = Depends(require_role(Role.ADMIN))
 router = APIRouter(
     prefix="/files", 
     tags=["Files"],
-    dependencies=[Depends(require_admin)]
+    dependencies=[admin_dep]
 )
 
 
