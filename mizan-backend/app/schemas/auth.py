@@ -29,3 +29,8 @@ class TokenResponse(BaseModel):
 
 class RefreshTokenSchema(BaseModel):
     refresh_token: str
+
+
+class ChangePasswordSchema(BaseModel):
+    old_password: str
+    new_password: str = Field(min_length=8)
