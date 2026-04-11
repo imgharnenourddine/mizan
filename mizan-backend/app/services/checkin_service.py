@@ -1,4 +1,3 @@
-# Morning and evening check-in business logic — save responses, build briefing, query history
 # app/services/checkin_service.py
 from datetime import date, timedelta
 from uuid import UUID
@@ -11,6 +10,7 @@ from app.models.checkin import EveningCheckin, MorningCheckin
 from app.models.student import Exam, Project, Schedule
 from app.schemas.checkin import EveningCheckinCreate, MorningCheckinCreate
 from app.services.agent_service import generate_daily_plan
+from app.services.context_builder import build_agent_context
 
 
 async def get_morning_briefing(db: AsyncSession, student_id: UUID) -> dict:
@@ -71,7 +71,7 @@ async def create_morning_checkin(db: AsyncSession, student_id: UUID, data: Morni
     if await has_morning_checkin_today(db, student_id):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Already checked in this morning.")
 
-    context = await get_morning_briefing(db, student_id)
+    context = await build_agent_context(db, student_id)
     generated_plan = await generate_daily_plan(context, data.sleep_hours, data.mood_score)
 
     checkin = MorningCheckin(

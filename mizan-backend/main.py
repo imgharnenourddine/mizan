@@ -1,20 +1,37 @@
-# Entry point for the Mizan FastAPI application — configures CORS, routers, and health check
-from fastapi import FastAPI
+# main.py
+from contextlib import asynccontextmanager
+
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.v1.routes.checkins import router as checkins_router
-from app.api.v1.routes.auth import router as auth_router
-from app.api.v1.routes.institutional import router as institutional_router
-from app.api.v1.routes.students import router as students_router
-from app.api.v1.routes.goals import router as goals_router
-from app.api.v1.routes.modes import router as modes_router
+from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.api.v1.routes.agent import router as agent_router
 from app.api.v1.routes.analytics import router as analytics_router
-from app.api.v1.routes.voice import router as voice_router
+from app.api.v1.routes.auth import router as auth_router
+from app.api.v1.routes.checkins import router as checkins_router
 from app.api.v1.routes.files import router as files_router
+from app.api.v1.routes.goals import router as goals_router
+from app.api.v1.routes.institutional import router as institutional_router
+from app.api.v1.routes.modes import router as modes_router
 from app.api.v1.routes.resources import router as resources_router
+from app.api.v1.routes.students import router as students_router
+from app.api.v1.routes.voice import router as voice_router
+from app.core.database import AsyncSessionLocal, get_db
+from app.services.resource_service import seed_default_resources
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    async with AsyncSessionLocal() as db:
+        await seed_default_resources(db)
+    yield
+
 app = FastAPI(
     title="Mizan API",
     description="Backend for Mizan - Student Wellbeing AI Platform",
     version="1.0.0",
+    lifespan=lifespan
 )
 
 app.add_middleware(
@@ -35,6 +52,36 @@ app.include_router(analytics_router, prefix="/api/v1")
 app.include_router(voice_router, prefix="/api/v1")
 app.include_router(files_router, prefix="/api/v1")
 app.include_router(resources_router, prefix="/api/v1")
-@app.get("/health")
+app.include_router(agent_router, prefix="/api/v1")
+
+
+@app.get("/health", tags=["System"])
 async def health_check():
-    return {"status": "ok", "version": "1.0.0", "project": "Mizan — ميزان"}
+    return {"status": "healthy"}
+
+
+@app.get("/api/v1/health/detailed", tags=["System"])
+async def detailed_health_check(db: AsyncSession = Depends(get_db)):
+    db_status = "error"
+    try:
+        await db.execute(text("SELECT 1"))
+        db_status = "connected"
+    except Exception:
+        pass
+        
+    return {
+        "status": "ok",
+        "database": db_status,
+        "services": [
+            "auth", 
+            "institutional", 
+            "students", 
+            "checkins", 
+            "goals", 
+            "modes", 
+            "analytics", 
+            "voice", 
+            "resources",
+            "agent"
+        ]
+    }

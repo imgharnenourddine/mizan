@@ -10,25 +10,23 @@ from fastapi import HTTPException, UploadFile, status
 from sqlalchemy import select, and_
 from sqlalchemy.ext.asyncio import AsyncSession
 from mistralai import Mistral
-from elevenlabs.client import AsyncElevenLabs
 from groq import AsyncGroq
 
 from app.core.config import get_settings
 from app.models.checkin import EveningCheckin, MorningCheckin
-from app.models.student import Exam, Project, Schedule
 from app.schemas.voice import (
     VoiceAnalysisResponse,
     VoiceQuestion,
     VoiceSessionResponse,
     VoiceSessionSubmit,
 )
-from app.services.checkin_service import has_morning_checkin_today
+from app.services.context_builder import build_agent_context
 
 settings = get_settings()
 
 
 async def get_questions_for_student(db: AsyncSession, student_id: UUID, period: str) -> List[str]:
-    today = date.today()
+    context = await build_agent_context(db, student_id)
     questions = []
 
     if period == "MORNING":
@@ -37,27 +35,20 @@ async def get_questions_for_student(db: AsyncSession, student_id: UUID, period: 
             "Comment tu te sens émotionnellement ce matin ?"
         ])
 
-        day_name = today.strftime("%A")
-        sched_res = await db.execute(
-            select(Schedule).where(and_(Schedule.student_id == student_id, Schedule.day_of_week == day_name))
-        )
-        if first_course := sched_res.scalars().first():
-            questions.append(f"Tu as {first_course.subject} ce matin avec {first_course.professor}, tu es prêt ?")
+        schedule = context.get("today_schedule", [])
+        if schedule:
+            first_course = schedule[0]
+            questions.append(f"Tu as {first_course['subject']} ce matin avec {first_course['professor']}, tu es prêt ?")
 
-        two_days_later = today + timedelta(days=2)
-        exam_res = await db.execute(
-            select(Exam).where(and_(Exam.student_id == student_id, Exam.exam_date >= today, Exam.exam_date <= two_days_later))
-        )
-        for exam in exam_res.scalars().all():
-            days_left = (exam.exam_date - today).days
-            questions.append(f"Ton examen de {exam.subject} est dans {days_left} jours, tu te sens prêt ?")
+        exams = context.get("upcoming_exams", [])
+        for exam in exams:
+            if exam["days_until"] <= 2:
+                questions.append(f"Ton examen de {exam['subject']} est dans {exam['days_until']} jours, tu te sens prêt ?")
 
-        project_res = await db.execute(
-            select(Project).where(and_(Project.student_id == student_id, Project.due_date >= today, Project.due_date <= two_days_later))
-        )
-        for project in project_res.scalars().all():
-            days_left = (project.due_date - today).days
-            questions.append(f"Ton projet {project.name} est à rendre dans {days_left} jours, où tu en es ?")
+        projects = context.get("upcoming_projects", [])
+        for project in projects:
+            if project["days_until"] <= 2:
+                questions.append(f"Ton projet {project['name']} est à rendre dans {project['days_until']} jours, où tu en es ?")
 
     elif period == "EVENING":
         questions.extend([
@@ -66,8 +57,8 @@ async def get_questions_for_student(db: AsyncSession, student_id: UUID, period: 
             "Comment tu te sens en fin de journée ?"
         ])
 
-        has_morning = await has_morning_checkin_today(db, student_id)
-        if has_morning:
+        last_checkin = context.get("last_checkin")
+        if last_checkin and last_checkin.get("date") == date.today().isoformat():
             questions.append("Par rapport à ce matin, tu te sens mieux ou moins bien ?")
 
     return questions[:4]
@@ -133,12 +124,19 @@ async def transcribe_audio(audio_file: UploadFile) -> str:
 
 
 async def analyze_voice_responses(db: AsyncSession, student_id: UUID, data: VoiceSessionSubmit) -> VoiceAnalysisResponse:
+    context = await build_agent_context(db, student_id)
     client = Mistral(api_key=settings.MISTRAL_API_KEY)
     
     transcriptions_text = "\n".join([f"Q{t.question_index}: {t.transcription}" for t in data.transcriptions])
     
     prompt = f"""Analyze the following transcribed voice responses from a student for their {data.period} check-in.
     
+Context:
+- Upcoming Exams: {len(context.get('upcoming_exams', []))}
+- Today's Classes: {len(context.get('today_schedule', []))}
+- Upcoming Projects: {len(context.get('upcoming_projects', []))}
+- Stress Indicators: {context.get('stress_indicators', {})}
+
 Transcriptions:
 {transcriptions_text}
 
