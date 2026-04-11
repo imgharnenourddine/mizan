@@ -96,4 +96,4 @@ async def handle_change_password(
     db: AsyncSession = Depends(get_db)
 ):
     await change_password(db, current_user.id, payload.old_password, payload.new_password)
-    return {"message": "Password changed successfully"}
+    return {"message": "Password changed successfully."}
