@@ -1,470 +1,141 @@
-<div align="center">
-
-# ميزان · Mizan
-
-### *L'agent IA de bien-être étudiant*
-
-<br/>
-
-> **"Il connaît ta journée avant que tu lui parles."**
-
-<br/>
-
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
-[![Next.js](https://img.shields.io/badge/Next.js-14-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org)
-[![Claude API](https://img.shields.io/badge/Claude-Sonnet_4.6-CC785C?style=for-the-badge&logo=anthropic&logoColor=white)](https://anthropic.com)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Aiven-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://aiven.io)
-[![Hackathon](https://img.shields.io/badge/Wellness_%26_Agent_Challenge-2026-6C63FF?style=for-the-badge)](https://enset.ma)
-
-<br/>
-
-**Wellness & Agent Challenge 2026 · ENSET Mohammedia · Eudaimonia Club**
-
-</div>
+# Mizan — The Autonomous Student Wellbeing Agent
+### 🏷️ GIEW 2026: Wellness & Agent Challenge Submission
+**Submission Date:** April 14, 2026 | **Version:** 1.0.0 "Eudaimonia"
 
 ---
 
-## 📖 Table des matières
+## 🚀 Live Production Access
 
-- [Le concept](#-le-concept)
-- [Le problème qu'on résout](#-le-problème-quon-résout)
-- [Comment ça marche](#-comment-ça-marche)
-- [Features complètes](#-features-complètes)
-- [Architecture](#-architecture)
-- [Stack technique](#-stack-technique)
-- [Structure du projet](#-structure-du-projet)
-- [Installation & Setup](#-installation--setup)
-- [Variables d'environnement](#-variables-denvironnement)
-- [Division des tâches](#-division-des-tâches)
-- [Roadmap MVP](#-roadmap-mvp)
-- [L'équipe](#-léquipe)
+Mizan is deployed on a high-availability AWS EC2 environment with SSL termination.
 
----
+*   **User Portal (Mobile/Web):** [https://mizanm.mohamededderyouch.me/](https://mizanm.mohamededderyouch.me/)
+*   **Administration Center:** [https://mizan.mohamededderyouch.me/](https://mizan.mohamededderyouch.me/)
+*   **Infrastructure API:** [https://api.mohamededderyouch.me/docs](https://api.mohamededderyouch.me/docs)
 
-## 💡 Le concept
-
-**Mizan** est un agent IA contextuel de bien-être étudiant. Il ne attend pas que tu lui parles — il t'observe dans le temps, apprend ton profil, et agit **proactivement** en croisant ton état émotionnel réel avec ta charge académique réelle.
-
-Quand tu ouvres l'app le matin, Mizan sait déjà :
-
-- Ce que tu as comme cours aujourd'hui et à quelle heure
-- Si un examen approche dans les 3 prochains jours
-- Comment tu te sentais hier soir
-- Combien tu as dormi
-- Ton pattern émotionnel des 7 derniers jours
-
-Donc au lieu de demander *"qu'est-ce que tu as à faire aujourd'hui ?"*, il dit directement :
-
-> *"Tu as cours de 8h à 12h, et ton examen d'Analyse est dans 2 jours. Comment tu te sens par rapport à ça ?"*
-
-C'est là que ça devient vraiment puissant.
+### 🔑 Evaluation Credentials
+| Persona | Email Address | Password |
+| :--- | :--- | :--- |
+| **Student** | `mohamededderyouch5@gmail.com` | `Simosimo1` |
+| **School Administrator** | `admin@mizanmail.local` | `Admin123!` |
 
 ---
 
-## 🎯 Le problème qu'on résout
+## 🎯 The Vision: Beyond Binary Productivity
+Modern education is experiencing a mental health crisis. Traditional productivity tools treat students as numerical outputs, leading to "over-optimization" and burnout. **Mizan** (Arabic for *Balance*) introduces the concept of the **Digital Sanctuary**—an agentic ecosystem that prioritizes the student's cognitive energy over their to-do list.
 
-Les étudiants jonglent entre cours, examens, projets, et bien-être mental — **sans outil qui comprend les deux à la fois.** Les apps de bien-être ne connaissent pas ton emploi du temps. Les apps académiques ne connaissent pas ton état mental.
-
-Mizan est le premier agent qui **croise les deux** avec un contexte institutionnel réel.
-
----
-
-## ⚙️ Comment ça marche
-
-### La journée type avec Mizan
-
-```
-🌅 MATIN
-   ↓
-Mizan lit ton emploi du temps du jour
-Mizan vérifie tes examens dans les 3 prochains jours
-Mizan analyse ton pattern des derniers jours
-   ↓
-Briefing complet : "Tu as cours de 8h à 12h. Examen d'Analyse dans 2 jours."
-2 questions rapides : humeur + sommeil
-   ↓
-✅ Plan de journée personnalisé généré
-
-🌙 SOIR
-   ↓
-Check-in rapide
-Proposition révision si bon état / récupération si fatigué
-Bilan des objectifs du jour
-```
-
-### La structure institutionnelle pré-chargée
-
-L'admin configure la plateforme **une seule fois** :
-
-```
-ENSET Mohammedia
-   └── Département
-        └── Filière
-             └── Promotion
-                  ├── Étudiants       (CSV trombinoscope)
-                  ├── Emploi du temps (CSV)
-                  ├── Planning examens (CSV)
-                  └── Projets         (CSV)
-```
-
-Quand l'étudiant active son compte, il trouve **déjà** son emploi du temps, ses examens, et sa filière. Il n'entre rien manuellement.
+Mizan is not a tool; it is an **Autonomous Digital Twin** that acts as a buffer between the student and the academic machine.
 
 ---
 
-## ✨ Features complètes
+## 🤖 The Agentic Core (Sense-Think-Decide-Act)
 
-### 🌅 Check-in du matin
-- Briefing complet de la journée avant toute question
-- 2 questions seulement : humeur (1-5) + heures de sommeil
-- Plan de journée généré en croisant état émotionnel + charge réelle
+Mizan implements a true autonomous agent loop, leveraging the latest **Mistral AI** models for high-order reasoning and real-time interaction.
 
-### 🌙 Check-in du soir
-- Bilan des objectifs du jour
-- Proposition de révision du cours si bon état émotionnel
-- Si fatigué → proposition récupération, pas de révision
+### 1️⃣ SENSE: The Sensory Layer
+Mizan ingests multi-dimensional data to maintain a real-time state of the student:
+*   **Contextual Senses**: Mood scores, sleep cycles, and self-reported stress levels via Morning/Evening rituals.
+*   **Academic Senses**: Real-time monitoring of institutional metadata. The agent detects new exams, shifts in project deadlines, and course load density.
+*   **Biometric Intent**: Captures vocal stress and sentiment through raw audio streams (WebSockets).
 
-### 🎯 Modes de travail (sélection manuelle)
+### 2️⃣ THINK: The Reasoning Engine
+The "Brain" uses a **ReAct (Reason + Action) Planner** powered by **Mistral-Large**. 
+*   **Reflective Logic**: Instead of matching keywords, the agent reflects: *"The user has an exam tomorrow but their mood is 2/5. A standard 'study' nudge will be counter-productive. I must first stabilize their state."*
+*   **Deterministic Safety**: If the `AgentPolicyEngine` detects critical stress indicators, it overrides the LLM with hard-coded safety protocols (deterministic fallbacks).
 
-| Mode | Icône |
-|------|-------|
-| Révision | 📚 |
-| Examen | ✍️ |
-| Projet | 💻 |
-| Repos | 😴 |
-| Sport | 🏃 |
-| Cours | 🎓 |
+### 3️⃣ DECIDE: Strategic Selection
+The Orchestrator chooses from a specialized repertoire of **Agent Actions**:
+*   **`PROPOSE_MODE_SWITCH`**: Reconfigures the entire frontend environment (Colors, Focus, Accessibility).
+*   **`CREATE_ADAPTIVE_TASK`**: Spawns tasks with adjusted complexity based on the student's cognitive bandwidth.
+*   **`AGENT_SYNC`**: Automatically clones institutional schedules to the student's dashboard to ensure absolute data parity without user effort.
 
-Mizan croise les modes avec l'humeur :
-> *"Cette semaine tu as passé 80% en révision et ton humeur a baissé jeudi et vendredi. Tu manques de temps de repos."*
-
-### 📊 Historique & visualisation
-- Graphe d'humeur sur 7, 14, 30 jours
-- Moyenne de sommeil hebdomadaire
-- Jours de stress vs jours calmes
-- Répartition des modes de travail par semaine
-
-### 🎯 Objectifs personnels
-- L'étudiant fixe ses objectifs (dormir 7h, sport 20min, réviser 3h)
-- Mizan suit, célèbre les progrès, réajuste si non atteints
-
-### 📚 Révision intelligente
-Si bon état émotionnel après le cours :
-> *"Tu te sens bien. Tu as eu Algorithmes ce matin — tu veux que je te prépare une révision rapide ?"*
-→ Résumé des points clés + questions de révision + timing suggéré
-
-### 🔔 Alertes proactives
-- **Pré-examen** : Intensification du suivi 3 jours avant chaque examen
-- **Surcharge** : Emploi du temps chargé + humeur basse → conseils adaptés
-- **Stress prolongé** : 3 jours consécutifs → suggestion douce de parler à un conseiller
-- **Jour libre** : Pas de cours → proposition plan révision ou récupération selon état
-
-### 🧠 Ressources intelligentes
-Proposées selon l'état détecté :
-- Anxiété → techniques de méditation
-- Procrastination → méthode Pomodoro
-- Fatigue chronique → article sur le sommeil
+### 4️⃣ ACT: System Intervention
+The agent executes decisions instantly:
+*   **Theme Injection**: Applying glassmorphic "Focus Modes" (Revision, Project, Reset).
+*   **Nudge Delivery**: Proactive notifications via WebSockets.
+*   **Lifecycle Management**: Cleaning up stale tasks or escalating wellbeing risks to the School Administrator.
 
 ---
 
-## 🏗 Architecture
+## 🏗️ Technical Architecture & Stack
 
-```
-┌─────────────────────────────────────────────────────┐
-│                   Frontend (Next.js)                 │
-│   Check-in · Plan journée · Graphes · Modes          │
-└────────────────────┬────────────────────────────────┘
-                     │ REST API + WebSocket
-┌────────────────────▼────────────────────────────────┐
-│                  Backend (FastAPI)                    │
-│                                                       │
-│  ┌─────────────┐  ┌──────────────┐  ┌─────────────┐ │
-│  │ Auth Service│  │Institutional │  │Student Svc  │ │
-│  │ JWT + RBAC  │  │School/Filière│  │Profils CSV  │ │
-│  └─────────────┘  └──────────────┘  └─────────────┘ │
-│                                                       │
-│  ┌─────────────────────────────────────────────────┐ │
-│  │              Agent Mizan (Claude API)            │ │
-│  │                                                   │ │
-│  │  Context Builder → Claude Sonnet → Plan Parser   │ │
-│  │                                                   │ │
-│  │  Inputs: emploi du temps + examens + humeur       │ │
-│  │          + sommeil + modes + historique           │ │
-│  └─────────────────────────────────────────────────┘ │
-│                                                       │
-│  ┌─────────────┐  ┌──────────────┐  ┌─────────────┐ │
-│  │ Checkin Svc │  │  Goals Svc   │  │Analytics Svc│ │
-│  └─────────────┘  └──────────────┘  └─────────────┘ │
-└────────────────────┬────────────────────────────────┘
-                     │
-┌────────────────────▼────────────────────────────────┐
-│              PostgreSQL (Aiven Cloud)                 │
-└─────────────────────────────────────────────────────┘
+Mizan architecture is designed for low latency and high reliability, separating the "Cognitive Brain" from the "Reactive Interface".
+
+### The Stack
+*   **AI Engine**: Mistral AI (Large 2, Voxtral-STT, Voxtral-TTS).
+*   **Computational Backend**: FastAPI (Python 3.12) - High-concurrency async orchestrator.
+*   **Data Persistence**: PostgreSQL 16 (Relational Context) + SQLAlchemy 2.0.
+*   **Frontend Ecosystem**: Next.js 14 (App Router), Tailwind CSS, Shadcn UI, Framer Motion.
+*   **Real-time Communication**: WebSockets for live voice streaming and instant agent pushes.
+*   **Infrastructure**: Docker Compose, AWS EC2, Nginx Reverse Proxy, Certbot SSL.
+
+### Architecture Diagram
+```mermaid
+graph TD
+    subgraph Client ["Client Surfaces (Next.js)"]
+        UI[Glassmorphic Dashboard]
+        Voice[Real-time Audio Recorder]
+    end
+
+    subgraph Backend ["Agent Brain (FastAPI)"]
+        Orch[Agent Orchestrator]
+        Policy[Policy Engine]
+        Flow[Action Handler]
+    end
+
+    subgraph Intelligence ["Mistral AI"]
+        LLM[Mistral Large]
+        Audio[Voxtral STT/TTS]
+    end
+
+    UI <-- "WebSockets" --> Backend
+    Voice <-- "Binary Stream" --> Audio
+    Backend <--> LLM
+    Orch --> Policy
+    Policy --> Flow
+    Flow --> DB[(PostgreSQL)]
 ```
 
 ---
 
-## 🛠 Stack technique
+## 🎭 Deep-Dive Scenarios
 
-| Couche | Technologie |
-|--------|-------------|
-| **Agent IA** | Claude API `claude-sonnet-4-6` |
-| **Backend** | FastAPI · Python 3.12 |
-| **Base de données** | PostgreSQL · Aiven Cloud |
-| **ORM** | SQLAlchemy 2.0 async |
-| **Migrations** | Alembic |
-| **Auth** | JWT · passlib bcrypt |
-| **Frontend** | Next.js 14 · TypeScript |
-| **UI** | Tailwind CSS · shadcn/ui |
-| **Graphes** | Recharts |
-| **Temps réel** | WebSockets natifs |
-| **Déploiement** | Railway (backend) · Vercel (frontend) |
+### 🌊 Scenario A: Burnout Stabilization
+1.  **Sense**: Student logs `Mood: 1/5` for the 3rd consecutive day during the Morning Ritual.
+2.  **Think**: Agent identifies "High Exhaustion" + "Major Exam in 2 days".
+3.  **Decide**: LLM determines that rest is the only path to success.
+4.  **Act**: Mizan forces `RESET` mode, hides the exam countdown to reduce anxiety, and creates a "15-min Meditative Breathing" task.
+
+### 📚 Scenario B: The Institutional Synchronization
+1.  **Sense**: School Head adds a new exam to the `Architecture` class.
+2.  **Think**: Agent identifies 30 students impacted by this change.
+3.  **Decide**: Synchronize personal schedules immediately.
+4.  **Act**: The `sync_class_content` service clones the metadata and notifies all students via the PWA.
 
 ---
 
-## 📁 Structure du projet
+## 🛠️ Execution & Deployment Guide
 
-```
-mizan/
-├── mizan-backend/
-│   ├── app/
-│   │   ├── api/v1/routes/
-│   │   │   ├── auth.py
-│   │   │   ├── institutional.py
-│   │   │   ├── students.py
-│   │   │   ├── checkins.py
-│   │   │   ├── goals.py
-│   │   │   ├── modes.py
-│   │   │   ├── agent.py
-│   │   │   └── analytics.py
-│   │   ├── services/
-│   │   │   ├── auth_service.py
-│   │   │   ├── institutional_service.py
-│   │   │   ├── student_service.py
-│   │   │   ├── checkin_service.py
-│   │   │   ├── goal_service.py
-│   │   │   ├── mode_service.py
-│   │   │   ├── agent_service.py        ← Le cœur de Mizan
-│   │   │   ├── context_builder.py      ← Construit le contexte pour Claude
-│   │   │   └── analytics_service.py
-│   │   ├── models/
-│   │   │   ├── user.py
-│   │   │   ├── institution.py
-│   │   │   ├── student.py
-│   │   │   ├── checkin.py
-│   │   │   ├── goal.py
-│   │   │   ├── mode_session.py
-│   │   │   └── resource.py
-│   │   ├── schemas/
-│   │   ├── core/
-│   │   │   ├── config.py
-│   │   │   ├── database.py
-│   │   │   ├── security.py
-│   │   │   └── dependencies.py
-│   │   └── utils/
-│   ├── alembic/
-│   ├── tests/
-│   ├── .env.example
-│   ├── requirements.txt
-│   └── main.py
-│
-└── mizan-frontend/
-    ├── app/
-    │   ├── (auth)/login/
-    │   ├── dashboard/
-    │   ├── checkin/morning/
-    │   ├── checkin/evening/
-    │   ├── modes/
-    │   ├── goals/
-    │   ├── history/
-    │   └── admin/
-    ├── components/
-    ├── lib/
-    └── public/
-```
-
----
-
-## 🚀 Installation & Setup
-
-### Prérequis
-- Python 3.12+
-- Node.js 18+
-- Compte [Aiven](https://aiven.io) (PostgreSQL free tier)
-- Clé API [Anthropic](https://console.anthropic.com)
-
-### Backend
-
+### Evaluation via Docker
 ```bash
-# 1. Cloner le repo
-git clone https://github.com/[votre-org]/mizan.git
-cd mizan/mizan-backend
+# 1. Clone & Enter
+git clone https://github.com/simoderyouch/Mizan.git && cd Mizan
 
-# 2. Créer l'environnement virtuel
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
+# 2. Configure Credentials
+cp .env.compose.example .env.compose
+# Important: Add your MISTRAL_API_KEY in .env.compose
 
-# 3. Installer les dépendances
-pip install -r requirements.txt
-
-# 4. Configurer les variables d'environnement
-cp .env.example .env
-# Éditer .env avec vos valeurs
-
-# 5. Lancer les migrations
-alembic upgrade head
-
-# 6. Démarrer le serveur
-uvicorn main:app --reload
+# 3. Spin up the Sanctuary
+docker compose --env-file .env.compose up -d --build
 ```
-
-### Frontend
-
-```bash
-cd mizan/mizan-frontend
-
-# 1. Installer les dépendances
-npm install
-
-# 2. Configurer
-cp .env.local.example .env.local
-# Éditer .env.local
-
-# 3. Démarrer
-npm run dev
-```
-
-Backend disponible sur `http://localhost:8000`  
-Frontend disponible sur `http://localhost:3000`  
-Documentation API sur `http://localhost:8000/docs`
+*   **Frontend**: `http://localhost:3000`
+*   **Backend**: `http://localhost:8000/docs`
 
 ---
 
-## 🔐 Variables d'environnement
-
-### Backend `.env`
-
-```env
-# Base de données (Aiven PostgreSQL)
-DATABASE_URL=postgresql+asyncpg://user:password@host:port/defaultdb?ssl=require
-
-# Sécurité
-SECRET_KEY=your-secret-key-minimum-32-characters
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-REFRESH_TOKEN_EXPIRE_DAYS=7
-
-# Claude API
-ANTHROPIC_API_KEY=sk-ant-...
-
-# App
-APP_ENV=development
-```
-
-### Frontend `.env.local`
-
-```env
-NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
-NEXT_PUBLIC_WS_URL=ws://localhost:8000/ws
-```
+## 🌟 Strategic Impact & Roadmap
+*   **Scalability**: Built for institutional-wide deployment (Schools/Universities).
+*   **Accessibility**: Full voice-driven interaction for students with visual or motor impairments.
+*   **Predictive Analytics**: Future iterations will include "Stress Prediction" using historical wellbeing patterns.
 
 ---
-
-## 👥 Division des tâches
-
-### 👤 Développeur 1 — Fondations + Agent
-
-| # | Tâche | Complexité |
-|---|-------|-----------|
-| 1 | Auth Service (JWT, RBAC, 5 rôles) | 🔴 Complexe |
-| 2 | Institutional Service (école/filière/classe) | 🟡 Moyenne |
-| 3 | File Service (upload CSV, parsing) | 🟢 Simple |
-| 4 | Student Service (profils, trombinoscope) | 🟡 Moyenne |
-| 5 | Context Builder (construit le prompt Claude) | 🔴 Complexe |
-| 6 | Agent Service (Claude API + plan parser) | 🔴 Complexe |
-| 7 | Analytics Service (graphes, patterns) | 🟡 Moyenne |
-
-### 👤 Développeur 2 — Données métier + Frontend
-
-| # | Tâche | Complexité |
-|---|-------|-----------|
-| 1 | Modèles DB (checkin, goals, modes, resources) | 🟡 Moyenne |
-| 2 | Checkin Service (matin/soir, historique) | 🟡 Moyenne |
-| 3 | Goal Service (objectifs, suivi, célébration) | 🟢 Simple |
-| 4 | Mode Session Service (tracker d'activité) | 🟢 Simple |
-| 5 | Pages Frontend (dashboard, check-in, graphes) | 🔴 Complexe |
-| 6 | Composants UI (mood picker, plan card, charts) | 🟡 Moyenne |
-| 7 | Notification Service (alertes proactives) | 🟡 Moyenne |
-
-> ⚠️ **Point de sync :** Dev 2 attend que Dev 1 finisse Auth Service avant de commencer. Tout le reste avance en parallèle.
-
----
-
-## 📋 Roadmap MVP
-
-### 🔴 P1 — Obligatoire pour la démo
-
-- [ ] Auth + Login page
-- [ ] Upload CSV emploi du temps + examens
-- [ ] Check-in du matin (briefing + 2 questions)
-- [ ] Génération du plan de journée par Claude
-- [ ] Modes de travail (tracker)
-- [ ] Dashboard étudiant avec graphe humeur 7 jours
-
-### 🟡 P2 — Important
-
-- [ ] Check-in du soir
-- [ ] Objectifs personnels + suivi
-- [ ] Alerte pré-examen automatique
-- [ ] Détection surcharge (emploi du temps chargé + humeur basse)
-- [ ] Dashboard admin
-
-### 🟢 P3 — Bonus
-
-- [ ] Proposition révision intelligente après cours
-- [ ] Ressources ciblées (méditation, Pomodoro, sommeil)
-- [ ] Alerte conseiller après 3 jours de stress
-- [ ] Export rapport hebdomadaire
-
----
-
-## 📅 Planning Hackathon (3 jours)
-
-```
-Jour 1 — Fondations
-├── Matin  : Setup DB + Auth + modèles
-├── Après-midi : Institutional + Upload CSV + Student
-└── Soir   : Context Builder + premiers tests Claude
-
-Jour 2 — Cœur métier
-├── Matin  : Agent Service complet + Check-in
-├── Après-midi : Frontend Dashboard + Check-in UI
-└── Soir   : Modes + Goals + tests intégration
-
-Jour 3 — Finition & Démo
-├── Matin  : Graphes + Analytics + polish UI
-├── Après-midi : Tests end-to-end + bugfix
-└── Soir   : Préparation pitch + démo finale
-```
-
----
-
-## 🌟 Ce qui rend Mizan vraiment agentique
-
-- **Proactif** : n'attend pas que l'étudiant demande quelque chose
-- **Contextuel** : croise données institutionnelles réelles + état émotionnel
-- **Temporel** : observe dans le temps, apprend les patterns personnels
-- **Adaptatif** : change ses recommandations selon l'état du jour
-- **Préventif** : détecte les situations à risque avant qu'elles s'aggravent
-
----
-
-<div align="center">
-
-**Mizan — ميزان**  
-*L'équilibre entre performance académique et bien-être étudiant*
-
-**Wellness & Agent Challenge 2026 · ENSET Mohammedia**
-
-`#WELLNESSAGENT` · `#GIEW2026` · `AGENTIC AI` · `WELLBEING`
-
-</div>
+*Created with technical excellence and human empathy by Team Mizan.*
